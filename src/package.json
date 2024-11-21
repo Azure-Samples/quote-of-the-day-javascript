@@ -1,0 +1,15 @@
+{
+  "name": "quoteoftheday",
+  "scripts": {
+    "build-client": "cd client && npm install && npm run build",
+    "build": "npm install && npm run build-client",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@azure/app-configuration-provider": "latest",
+    "@microsoft/feature-management": "2.0.0-preview.3",
+    "@microsoft/feature-management-applicationinsights-node": "2.0.0-preview.3",
+    "applicationinsights": "^2.9.6",
+    "express": "^4.19.2"
+  }
+}

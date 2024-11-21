@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: quote-of-the-day-javascript
+metadata:
+    template: quote-of-the-day-javascript@0.0.1-beta
+hooks:
+    prepackage: 
+        run: cd src && npm run build-client
+services:
+    QuoteOfTheDay:
+        project: src
+        host: appservice
+        language: js
