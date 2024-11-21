@@ -5,6 +5,7 @@ metadata:
     template: quote-of-the-day-javascript@0.0.1-beta
 hooks:
     prepackage: 
+        shell: pwsh
         run: cd src && npm run build-client
 services:
     QuoteOfTheDay:
