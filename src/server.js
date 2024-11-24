@@ -1,3 +1,6 @@
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT license.
+
 const appConfigConnectionString = process.env.APPCONFIG_CONNECTION_STRING;
 const appInsightsConnectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING;
 
@@ -38,15 +41,6 @@ async function initializeConfig() {
         new ConfigurationMapFeatureFlagProvider(appConfig),
         { onFeatureEvaluated: createTelemetryPublisher(applicationInsights.defaultClient) }
     );
-
-    // Set up periodic refresh
-    setInterval(async () => {
-        try {
-            await appConfig.refresh();
-        } catch (error) {
-            console.error("Failed to refresh config:", error);
-        }
-    }, 10_000);
 }
 
 // Initialize the configuration and start the server
@@ -63,7 +57,9 @@ initializeConfig()
 function startServer() {
     app.get("/api/config", (req, res) => {
         res.json(appConfig.constructConfigurationObject());
-    })
+
+        refreshConfig();
+    });
 
     app.get("/api/variant", async (req, res) => {
         const { userId, groups } = req.query;
@@ -75,7 +71,9 @@ function startServer() {
             name: variant?.name,
             configuration: variant?.configuration
         });
-    })
+
+        refreshConfig();
+    });
 
     app.post("/api/logEvent", (req, res) => {
         const { TargetingId } = req.body;
@@ -84,10 +82,20 @@ function startServer() {
         }
         trackEvent(applicationInsights.defaultClient, TargetingId, { name: "Like" });
         res.status(200).send({ message: "Event logged successfully" });
+
+        refreshConfig();
     });
 
     const port = process.env.PORT || "8080";
     app.listen(port, () => {
         console.log(`Server is running at http://localhost:${port}`);
     });
+}
+
+function refreshConfig() {
+    appConfig.refresh()
+        .then((res) => {console.log("Config refresh triggered.")})
+        .catch((error) => {
+            console.error("Failed to refresh config:", error);
+        });
 }
