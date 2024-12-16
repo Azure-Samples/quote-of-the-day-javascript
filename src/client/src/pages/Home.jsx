@@ -21,7 +21,7 @@ function Home() {
       );
       if (response.ok) {
         const result = await response.json();
-        setMessage(result.message);
+        setMessage(result.message ?? "Quote of the Day"); // default message is "Quote of the Day"
       } else {
         console.error("Failed to get greeting message.");
       }
@@ -56,11 +56,11 @@ function Home() {
 
   return (
     <div className="quote-card">
-      { message ?
+      { message != undefined ?
         ( 
         <>
           <h2>
-            <>{message ?? "Quote of the Day"}</>
+            <>{message}</>
           </h2>
           <blockquote>
             <p>"You cannot change what you are, only what you do."</p>

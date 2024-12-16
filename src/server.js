@@ -52,7 +52,6 @@ initializeConfig()
 function startServer() {
     app.use(express.json());
     app.use(express.static("public"));
-    app.use((req, res, next) => { console.log("YES"); next(); });
 
     app.get("/api/config", (req, res) => {
         res.json(appConfig.constructConfigurationObject());
@@ -80,8 +79,6 @@ function startServer() {
         }
         trackEvent(applicationInsights.defaultClient, UserId, { name: "Like" });
         res.status(200).send({ message: "Like event logged successfully" });
-
-        refreshConfig();
     });
 
     const port = process.env.PORT || "8080";
@@ -91,9 +88,5 @@ function startServer() {
 }
 
 function refreshConfig() {
-    appConfig.refresh()
-        .then((res) => {console.log("Config refresh triggered.")})
-        .catch((error) => {
-            console.error("Failed to refresh config:", error);
-        });
+    appConfig.refresh();
 }
