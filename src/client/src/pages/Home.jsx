@@ -9,21 +9,21 @@ import { AppContext } from "./AppContext";
 function Home() {
   const { featureManager, currentUser } = useContext(AppContext);
   const [liked, setLiked] = useState(false);
-  const [variant, setVariant] = useState(undefined);
+  const [message, setMessage] = useState(undefined);
 
   useEffect(() => {
     const init = async () => {
       const response = await fetch(
-        `/api/variant?userId=${currentUser ?? ""}`,
+        `/api/getGreetingMessage?userId=${currentUser ?? ""}`,
         {
           method: "GET",
         }
       );
       if (response.ok) {
         const result = await response.json();
-        setVariant(result);
+        setMessage(result.message);
       } else {
-        console.error("Failed to get variant.");
+        console.error("Failed to get greeting message.");
       }
       setLiked(false);
     };
@@ -34,21 +34,21 @@ function Home() {
   const handleClick = async () => {
     if (!liked) {
       try {
-        const response = await fetch("/api/logEvent", {
+        const response = await fetch("/api/like", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ TargetingId: currentUser ?? "" }),
+          body: JSON.stringify({ UserId: currentUser ?? "" }),
         });
 
         if (response.ok) {
-          console.log("Event logged successfully");
+          console.log("Like the quote successfully.");
         } else {
-          console.error("Failed to log event");
+          console.error("Failed to like the quote.");
         }
       } catch (error) {
-        console.error("Error logging event:", error);
+        console.error("Error:", error);
       }
     }
     setLiked(!liked);
@@ -56,11 +56,11 @@ function Home() {
 
   return (
     <div className="quote-card">
-      { variant ?
+      { message ?
         ( 
         <>
           <h2>
-            <>{variant.configuration ?? "Quote of the Day"}</>
+            <>{message ?? "Quote of the Day"}</>
           </h2>
           <blockquote>
             <p>"You cannot change what you are, only what you do."</p>

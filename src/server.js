@@ -9,8 +9,6 @@ applicationInsights.setup(appInsightsConnectionString).start();
 
 const express = require("express");
 const app = express();
-app.use(express.json());
-app.use(express.static("public"));
 
 const { load } = require("@azure/app-configuration-provider");
 const { FeatureManager, ConfigurationMapFeatureFlagProvider } = require("@microsoft/feature-management");
@@ -33,9 +31,6 @@ async function initializeConfig() {
             }
         }
     });
-    appConfig.onRefresh(() => {
-        console.log("Config refreshed.");
-    });
 
     featureManager = new FeatureManager(
         new ConfigurationMapFeatureFlagProvider(appConfig),
@@ -55,33 +50,36 @@ initializeConfig()
     });
 
 function startServer() {
+    app.use(express.json());
+    app.use(express.static("public"));
+    app.use((req, res, next) => { console.log("YES"); next(); });
+
     app.get("/api/config", (req, res) => {
         res.json(appConfig.constructConfigurationObject());
 
         refreshConfig();
     });
 
-    app.get("/api/variant", async (req, res) => {
+    app.get("/api/getGreetingMessage", async (req, res) => {
         const { userId, groups } = req.query;
         if (userId === undefined && groups === undefined) {
             return res.status(400).send({ error: "userId and groups are required" });
         }
         const variant = await featureManager.getVariant("Greeting", { userId: userId, groups: groups ? groups.split(",") : []});
         res.status(200).send({
-            name: variant?.name,
-            configuration: variant?.configuration
+            message: variant?.configuration
         });
 
         refreshConfig();
     });
 
-    app.post("/api/logEvent", (req, res) => {
-        const { TargetingId } = req.body;
-        if (TargetingId === undefined) {
-            return res.status(400).send({ error: "TargetingId is required" });
+    app.post("/api/like", (req, res) => {
+        const { UserId } = req.body;
+        if (UserId === undefined) {
+            return res.status(400).send({ error: "UserId is required" });
         }
-        trackEvent(applicationInsights.defaultClient, TargetingId, { name: "Like" });
-        res.status(200).send({ message: "Event logged successfully" });
+        trackEvent(applicationInsights.defaultClient, UserId, { name: "Like" });
+        res.status(200).send({ message: "Like event logged successfully" });
 
         refreshConfig();
     });
