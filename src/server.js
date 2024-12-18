@@ -8,7 +8,7 @@ const applicationInsights = require("applicationinsights");
 applicationInsights.setup(appInsightsConnectionString).start();
 
 const express = require("express");
-const app = express();
+const server = express();
 
 const { load } = require("@azure/app-configuration-provider");
 const { FeatureManager, ConfigurationMapFeatureFlagProvider } = require("@microsoft/feature-management");
@@ -50,16 +50,16 @@ initializeConfig()
     });
 
 function startServer() {
-    app.use(express.json());
-    app.use(express.static("public"));
-
-    app.get("/api/config", (req, res) => {
-        res.json(appConfig.constructConfigurationObject());
-
-        refreshConfig();
+    server.use((req, res, next) => {
+        if (req.path === "/") {
+            appConfig.refresh(); // refresh configuration everytime the home page is requested
+        }
+        next();
     });
+    server.use(express.json());
+    server.use(express.static("public"));
 
-    app.get("/api/getGreetingMessage", async (req, res) => {
+    server.get("/api/getGreetingMessage", async (req, res) => {
         const { userId, groups } = req.query;
         if (userId === undefined && groups === undefined) {
             return res.status(400).send({ error: "userId and groups are required" });
@@ -68,11 +68,9 @@ function startServer() {
         res.status(200).send({
             message: variant?.configuration
         });
-
-        refreshConfig();
     });
 
-    app.post("/api/like", (req, res) => {
+    server.post("/api/like", (req, res) => {
         const { UserId } = req.body;
         if (UserId === undefined) {
             return res.status(400).send({ error: "UserId is required" });
@@ -82,11 +80,7 @@ function startServer() {
     });
 
     const port = process.env.PORT || "8080";
-    app.listen(port, () => {
+    server.listen(port, () => {
         console.log(`Server is running at http://localhost:${port}`);
     });
-}
-
-function refreshConfig() {
-    appConfig.refresh();
 }
