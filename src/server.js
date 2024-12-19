@@ -51,9 +51,7 @@ initializeConfig()
 
 function startServer() {
     server.use((req, res, next) => {
-        if (req.path === "/") {
-            appConfig.refresh(); // refresh configuration everytime the home page is requested
-        }
+        appConfig.refresh(); // refresh configuration everytime a request comes in
         next();
     });
     server.use(express.json());
@@ -61,9 +59,6 @@ function startServer() {
 
     server.get("/api/getGreetingMessage", async (req, res) => {
         const { userId, groups } = req.query;
-        if (userId === undefined && groups === undefined) {
-            return res.status(400).send({ error: "userId and groups are required" });
-        }
         const variant = await featureManager.getVariant("Greeting", { userId: userId, groups: groups ? groups.split(",") : []});
         res.status(200).send({
             message: variant?.configuration
