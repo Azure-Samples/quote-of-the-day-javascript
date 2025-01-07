@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-const appConfigConnectionString = process.env.APPCONFIG_CONNECTION_STRING;
+const appConfigEndpoint = process.env.APPCONFIG_ENDPOINT;
 const appInsightsConnectionString = process.env.APPLICATIONINSIGHTS_CONNECTION_STRING;
 
 const applicationInsights = require("applicationinsights");
@@ -10,6 +10,7 @@ applicationInsights.setup(appInsightsConnectionString).start();
 const express = require("express");
 const server = express();
 
+const { DefaultAzureCredential } = require("@azure/identity");
 const { load } = require("@azure/app-configuration-provider");
 const { FeatureManager, ConfigurationMapFeatureFlagProvider } = require("@microsoft/feature-management");
 const { createTelemetryPublisher, trackEvent } = require("@microsoft/feature-management-applicationinsights-node");
@@ -17,7 +18,7 @@ let appConfig;
 let featureManager;
 async function initializeConfig() {
     console.log("Loading configuration...");
-    appConfig = await load(appConfigConnectionString, {
+    appConfig = await load(appConfigEndpoint, new DefaultAzureCredential(), {
         featureFlagOptions: {
             enabled: true,
             selectors: [
