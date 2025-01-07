@@ -83,14 +83,13 @@ module quoteOfTheDay './app/QuoteOfTheDay.bicep' = {
     name: '${abbrs.appContainerApps}quoteoftheda-${resourceToken}'
     location: location
     tags: tags
-    identityName: '${abbrs.managedIdentityUserAssignedIdentities}quoteoftheda-${resourceToken}'
+    appConfigurationName: appConfiguration.outputs.appConfigurationName
     applicationInsightsName: monitoring.outputs.applicationInsightsName
     appDefinition: quoteOfTheDayDefinition
-    appConfigurationConnectionString: appConfiguration.outputs.appConfigurationConnectionString
     appServicePlanId: appServicePlan.outputs.id
   }
   scope: rg
 }
 
-output AzureAppConfigurationConnectionString string = appConfiguration.outputs.appConfigurationConnectionString
+output AzureAppConfigurationConnectionString string = appConfiguration.outputs.appConfigurationEndpoint
 output ApplicationInsightsConnectionString string = monitoring.outputs.applicationInsightsConnectionString
