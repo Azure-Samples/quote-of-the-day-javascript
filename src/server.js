@@ -51,8 +51,13 @@ initializeConfig()
     });
 
 function startServer() {
+    // Use a middleware to refresh the configuration before each request
+    // The configuration refresh is triggered by the incoming requests to your web app. No refresh will occur if your app is idle.
     server.use((req, res, next) => {
-        appConfig.refresh(); // refresh configuration everytime a request comes in
+        // The configuration refresh happens asynchronously to the processing of your app's incoming requests.
+        // It will not block or slow down the incoming request that triggered the refresh. 
+        // The request that triggered the refresh may not get the updated configuration values, but later requests will get new configuration values.
+        appConfig.refresh(); // intended to not await the refresh
         next();
     });
     server.use(express.json());
@@ -60,7 +65,7 @@ function startServer() {
 
     server.get("/api/getGreetingMessage", async (req, res) => {
         const { userId, groups } = req.query;
-        const variant = await featureManager.getVariant("Greeting", { userId: userId, groups: groups ? groups.split(",") : []});
+        const variant = await featureManager.getVariant("Greeting", { userId: userId, groups: groups ? groups.split(",") : [] });
         res.status(200).send({
             message: variant?.configuration
         });
