@@ -11,10 +11,10 @@ param quoteOfTheDayDefinition object
 param LAWname string
 param location string
 param LAWsku string
-param AIname string
-param AItype string
+param AppInsightsName string
+param ApplicationType string
 param AIrequestSource string
-param AACname string
+param AppConfigName string
 param AACsku string
 param AACsoftDeleteRetentionInDays int
 param AACenablePurgeProtection bool
@@ -43,9 +43,9 @@ module monitoring './shared/monitoring.bicep' = {
   params: {
     location: location
     logAnalyticsName: '${LAWname}${resourceToken}'
-    applicationInsightsName: '${AIname}${resourceToken}'
+    applicationInsightsName: '${AppInsightsName}${resourceToken}'
     AIrequestSource: AIrequestSource
-    AItype: AItype    
+    ApplicationType: ApplicationType    
     LAWsku: LAWsku
     tags: tags
   }
@@ -60,7 +60,7 @@ module appConfiguration './shared/appConfiguration.bicep' = {
     AACsoftDeleteRetentionInDays: AACsoftDeleteRetentionInDays
     AACsku: AACsku
     location: location
-    name: '${AACname}${resourceToken}'
+    name: '${AppConfigName}${resourceToken}'
     applicationInsightsId: monitoring.outputs.applicationInsightsId
     tags: tags
   }

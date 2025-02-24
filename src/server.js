@@ -33,10 +33,10 @@ async function initializeConfig() {
         }
     });
 
-    featureManager = new FeatureManager(
-        new ConfigurationMapFeatureFlagProvider(appConfig),
-        { onFeatureEvaluated: createTelemetryPublisher(applicationInsights.defaultClient) }
-    );
+    const featureFlagProvider = new ConfigurationMapFeatureFlagProvider(appConfig);
+    featureManager = new FeatureManager(featureFlagProvider, {
+        onFeatureEvaluated: createTelemetryPublisher(applicationInsights.defaultClient)
+    });
 }
 
 // Initialize the configuration and start the server

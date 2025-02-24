@@ -23,16 +23,16 @@
       "LAWsku": {
         "value": "pergb2018"
       },
-      "AIname": {
+      "AppInsightsName": {
         "value": "aipreview"
       },
-      "AItype": {
+      "ApplicationType": {
         "value": "web"
       },
       "AIrequestSource": {
         "value": "Custom Deployment"
       },
-      "AACname": {
+      "AppConfigName": {
         "value": "aacpreview"
       },
       "AACsku": {

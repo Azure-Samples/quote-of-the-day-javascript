@@ -1,7 +1,7 @@
 param logAnalyticsName string
 param applicationInsightsName string
 param location string = resourceGroup().location
-param AItype string
+param ApplicationType string
 param AIrequestSource string
 param LAWsku string
 param tags object = {}
@@ -23,7 +23,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   tags: tags
   kind: 'other'
   properties: {
-    Application_Type: AItype
+    Application_Type: ApplicationType
     Flow_Type: 'Bluefield'
     Request_Source: AIrequestSource
     WorkspaceResourceId: logAnalytics.id
