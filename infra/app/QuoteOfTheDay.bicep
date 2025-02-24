@@ -30,7 +30,7 @@ resource appService 'Microsoft.Web/sites@2023-01-01' = {
 }
 
 @description('This is the built-in app configuration data reader role. See https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#app-configuration-data-reader')
-resource appConfigDataReaderDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
+resource appConfigDataReaderDefinition 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   name: '516239f1-63e1-4d78-a4de-a74fb236a071'
 }
 

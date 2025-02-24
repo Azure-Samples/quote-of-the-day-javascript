@@ -17,34 +17,34 @@ This application can be run using the [Azure Developer CLI](https://aka.ms/azd),
 - Install [azd](https://aka.ms/azure-dev/install).
 - Log in `azd` (if you haven't done it before) to your Azure account:
 
-```sh
-azd auth login
-```
+  ```sh
+  azd auth login
+  ```
 
 - Log in to the Azure CLI.
-```sh
-az login
-```
+
+  ```sh
+  az login
+  ```
 
 - Initialize `azd` from the root of the repo.
 
-```sh
-azd init
-```
+  ```sh
+  azd init
+  ```
 
-- During init:
-  - Enter an environment name for this deployment when prompted.
+- Enter an environment name (e.g. quote-of-the-day-js-example) for this deployment when prompted.
 - Create Azure resources and deploy the sample by running:
 
-```sh
-azd up
-```
+  ```sh
+  azd up
+  ```
 
 Notes:
 
-- The operation takes a few minutes the first time it is ever run for an environment.
-- At the end of the process, `azd` will display the `url` for the webapp. Follow that link to test the sample.
-- You can run `azd up` after saving changes to the sample to re-deploy and update the sample.
-- `azd down` is an easy way to delete the newly created resources.
+- The operation may take a few minutes when run for the first time in an environment.
+- Upon completion, `azd` will display the web application's `url`. Follow this link to test the sample.
+- To re-deploy and update the sample after making changes, run `azd up`.
+- Use `azd down` to easily delete the newly created resources.
 - Report any problems by opening an issue in [this repo](https://github.com/Azure-Samples/quote-of-the-day-dotnet/issues).
-- [FAQ and troubleshoot](https://learn.microsoft.com/azure/developer/azure-developer-cli/troubleshoot?tabs=Browser) for azd.
+- Refer to the [FAQ and troubleshoot](https://learn.microsoft.com/azure/developer/azure-developer-cli/troubleshoot) for `azd`.
