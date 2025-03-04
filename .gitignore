@@ -130,3 +130,4 @@ dist
 .azure/*
 
 src/public
+package-lock.json
