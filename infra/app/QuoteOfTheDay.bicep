@@ -22,7 +22,7 @@ resource appService 'Microsoft.Web/sites@2023-01-01' = {
   properties: {
     serverFarmId: appServicePlanId
     siteConfig: {
-      appCommandLine: 'npm start'
+      appCommandLine: 'npm install && npm start'
       linuxFxVersion: 'NODE|20-lts'
       alwaysOn: true
     }
@@ -54,10 +54,10 @@ module configAppSettings '../shared/appservice-appsettings.bicep' = {
     name: appService.name
     appSettings: union(
       {
-        ENABLE_ORYX_BUILD: true
+        ENABLE_ORYX_BUILD: false
       },
       {
-        SCM_DO_BUILD_DURING_DEPLOYMENT: true
+        SCM_DO_BUILD_DURING_DEPLOYMENT: false
       },
       {
         APPLICATIONINSIGHTS_CONNECTION_STRING: applicationInsights.properties.ConnectionString
