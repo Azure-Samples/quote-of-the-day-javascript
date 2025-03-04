@@ -10,6 +10,6 @@
     "@microsoft/feature-management": "^2.0.0",
     "@microsoft/feature-management-applicationinsights-node": "^2.0.0",
     "applicationinsights": "^2.9.6",
-    "express": "^4.19.2"
+    "express": "^4.21.2"
   }
 }
