@@ -34,7 +34,7 @@ async function initializeConfig() {
     });
 
     const featureFlagProvider = new ConfigurationMapFeatureFlagProvider(appConfig);
-    const publishTelemetry = createTelemetryPublisher(appInsights.defaultClient);
+    const publishTelemetry = createTelemetryPublisher(applicationInsights.defaultClient);
     featureManager = new FeatureManager(featureFlagProvider, {
         onFeatureEvaluated: publishTelemetry
     });
