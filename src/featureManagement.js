@@ -4,7 +4,7 @@
 
 const { DefaultAzureCredential } = require("@azure/identity");
 const { load } = require("@azure/app-configuration-provider");
-const { FeatureManager, ConfigurationMapFeatureFlagProvider, ConfigurationObjectFeatureFlagProvider } = require("@microsoft/feature-management");
+const { FeatureManager, ConfigurationMapFeatureFlagProvider } = require("@microsoft/feature-management");
 const { createTelemetryPublisher } = require("@microsoft/feature-management-applicationinsights-node");
 const config = require("./config");
 
