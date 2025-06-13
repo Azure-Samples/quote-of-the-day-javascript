@@ -7,6 +7,19 @@ hooks:
     prepackage: 
         shell: pwsh
         run: cd src && npm run build-client
+    predown:
+        windows:
+            shell: pwsh
+            run: |
+                Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass  
+                ./infra/scripts/pre-down.ps1
+            continueOnError: false
+            interactive: true
+        posix:
+            shell: sh
+            run: pwsh ./infra/scripts/pre-down.ps1
+            continueOnError: false
+            interactive: true
 services:
     QuoteOfTheDay:
         project: src

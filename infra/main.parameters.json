@@ -46,6 +46,9 @@
       },
       "AACdisableLocalAuth": {
         "value": false
+      },
+      "enableOnlineExperimentation": {
+        "value": "${ENABLE_ONLINE_EXPERIMENTATION=false}"
       }
   }
 }
