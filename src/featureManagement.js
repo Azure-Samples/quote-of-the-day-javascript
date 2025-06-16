@@ -8,24 +8,18 @@ const { FeatureManager, ConfigurationMapFeatureFlagProvider } = require("@micros
 const { createTelemetryPublisher } = require("@microsoft/feature-management-applicationinsights-node");
 const config = require("./config");
 
-// Variables to hold the AppConfig and FeatureManager instances
+// Variables to hold the App Configuration provider and feature manager instances
 let appConfig;
 let featureManager;
 
-// Initialize AppConfig and FeatureManager
+// Initialize App Configuration provider and feature management
 async function initializeFeatureManagement(appInsightsClient, targetingContextAccessor) {
-    console.log("Loading configuration...");
+    console.log("Loading feature flags from Azure App Configuration...");
     appConfig = await load(config.appConfigEndpoint, new DefaultAzureCredential(), {
         featureFlagOptions: {
             enabled: true,
-            selectors: [
-                {
-                    keyFilter: "*"
-                }
-            ],
             refresh: {
-                enabled: true,
-                refreshIntervalInMs: 10_000
+                enabled: true
             }
         }
     });

@@ -21,7 +21,7 @@ const targetingContextAccessor = {
     }
 };
 
-// Create middleware to store request in AsyncLocalStorage
+// A middleware to store request in AsyncLocalStorage
 const requestStorageMiddleware = (req, res, next) => {
     requestAccessor.run(req, next);
 };

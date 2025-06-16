@@ -15,13 +15,12 @@ const server = express();
 // Initialize Application Insights
 const appInsights = initializeAppInsights(targetingContextAccessor);
 
-// Global variables to store feature manager and app config
+// Global variables to store feature manager
 let featureManager;
 
 // Initialize the configuration and start the server
 async function startApp() {
     try {
-        // Initialize AppConfig and FeatureManager
         const result = await initializeFeatureManagement(
             appInsights.defaultClient, 
             targetingContextAccessor

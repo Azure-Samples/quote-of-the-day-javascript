@@ -14,7 +14,7 @@ function initializeRoutes(featureManager, appInsightsClient) {
         });
     });
 
-    // API route to track likes
+    // API route to track like events
     router.post("/api/like", (req, res) => {
         const { userId } = req.body;
         if (userId === undefined) {
