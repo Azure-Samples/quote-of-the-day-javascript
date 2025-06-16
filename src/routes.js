@@ -18,7 +18,7 @@ function initializeRoutes(featureManager, appInsightsClient) {
     router.post("/api/like", (req, res) => {
         const { userId } = req.body;
         if (userId === undefined) {
-            return res.status(400).send({ error: "UserId is required" });
+            return res.status(400).send({ error: "userId is required" });
         }
         appInsightsClient.trackEvent({ name: "Like" });
         res.status(200).send({ message: "Like event logged successfully" });
