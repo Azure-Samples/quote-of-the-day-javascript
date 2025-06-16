@@ -6,6 +6,7 @@ param AACenablePurgeProtection bool
 param AACdisableLocalAuth bool
 param applicationInsightsId string
 param tags object = {}
+param enableOnlineExperimentation bool
 
 resource appConfigurationStore 'Microsoft.AppConfiguration/configurationStores@2023-09-01-preview' = {
   name: name
@@ -76,5 +77,14 @@ resource variantFeatureFlagGreeting 'Microsoft.AppConfiguration/configurationSto
   }
 }
 
+resource experimentation 'Microsoft.AppConfiguration/configurationStores/experimentation@2025-02-01-preview' = if (enableOnlineExperimentation) {
+  parent: appConfigurationStore
+  name: 'default'
+}
+
 output appConfigurationEndpoint string = appConfigurationStore.properties.endpoint
 output appConfigurationName string = appConfigurationStore.name
+
+output managedResourceGroupName string = enableOnlineExperimentation ? experimentation.properties.managedResourceGroupName : ''
+output onlineExperimentationResourceId string = enableOnlineExperimentation ? experimentation.properties.onlineExperimentationWorkspaceResourceId : ''
+output storageAccountResourceId string = enableOnlineExperimentation ? experimentation.properties.storageAccountResourceId : ''

@@ -7,9 +7,9 @@ param environmentName string
 
 @secure()
 param quoteOfTheDayDefinition object
+param location string
 
 param LAWname string
-param location string
 param LAWsku string
 param AppInsightsName string
 param ApplicationType string
@@ -19,6 +19,11 @@ param AACsku string
 param AACsoftDeleteRetentionInDays int
 param AACenablePurgeProtection bool
 param AACdisableLocalAuth bool
+
+param principalId string
+param principalType string = 'User'
+
+param enableOnlineExperimentation bool
 
 // Tags that should be applied to all resources.
 // 
@@ -48,6 +53,8 @@ module monitoring './shared/monitoring.bicep' = {
     ApplicationType: ApplicationType    
     LAWsku: LAWsku
     tags: tags
+    principalId: principalId
+    principalType: principalType
   }
   scope: rg
 }
@@ -63,6 +70,7 @@ module appConfiguration './shared/appConfiguration.bicep' = {
     name: '${AppConfigName}${resourceToken}'
     applicationInsightsId: monitoring.outputs.applicationInsightsId
     tags: tags
+    enableOnlineExperimentation: enableOnlineExperimentation
   }
   scope: rg
 }
@@ -91,5 +99,49 @@ module quoteOfTheDay './app/QuoteOfTheDay.bicep' = {
   scope: rg
 }
 
+// Setup for online experimentation if enabled
+// Including adding summary rules and data export rule to Log Analytics
+module onlineExperimentationWorkspace 'shared/onlineExperimentation.bicep' = if (enableOnlineExperimentation) {
+  name: 'online-experimentation-${resourceToken}'
+  scope: subscription()
+  params: {
+    resourceId: appConfiguration.outputs.onlineExperimentationResourceId
+    resourceGroupname: appConfiguration.outputs.managedResourceGroupName
+    principalId: principalId
+    principalType: principalType
+  }
+}
+
+
+var ruleDefinitions = loadYamlContent('shared/la-summary-rules.yaml')
+module summaryRules 'shared/summaryRule.bicep' = [for (rule, i) in ruleDefinitions.summaryRules: if (enableOnlineExperimentation) {
+  name: 'loganalytics-summaryrule-${i}'
+  scope: rg
+  params: {
+    location: location
+    logAnalyticsWorkspaceName: monitoring.outputs.logAnalyticsWorkspaceName
+    summaryRuleName: rule.name
+    description: rule.description
+    query: rule.query
+    binSize: rule.binSize
+    destinationTable: rule.destinationTable
+  }
+}]
+
+module dataExportRule 'shared/dataExport.bicep' = if (enableOnlineExperimentation) {
+  name: 'loganalytics-dataexportrule'
+  scope: rg
+  params: {
+    name: 'OEW-${resourceToken}-DataExportRule'
+    logAnalyticsWorkspaceName: monitoring.outputs.logAnalyticsWorkspaceName
+    storageAccountResourceId: appConfiguration.outputs.storageAccountResourceId
+    tables: [
+      'AppEvents'
+    ]
+  }
+}
+
+output AZURE_RESOURCE_GROUP string = rg.name
+output APPCONFIG_RESOURCE_NAME string = appConfiguration.outputs.appConfigurationName
 output APPCONFIG_ENDPOINT string = appConfiguration.outputs.appConfigurationEndpoint
 output APPLICATIONINSIGHTS_CONNECTION_STRING string = monitoring.outputs.applicationInsightsConnectionString
