@@ -9,10 +9,12 @@ A react application showing how to load a **variant feature flag**  from **Azure
 
 ## Get Started
 
-- Replace the placeholders in `src/pages/AppContext.jsx`:
+- Replace the placeholders in `src/config.js`:
     ```js
-    const appInsightsConnectionString = "YOUR-APP-INSIGHTS-CONNECTION-STRING";
-    await loadFromAzureFrontDoor("YOUR-AZURE-FRONT-DOOR-ENDPOINT");
+    // Application Insights connection string (Instrumentation for telemetry)
+    appInsightsConnectionString: "YOUR-APP-INSIGHTS-CONNECTION-STRING",
+    // Azure Front Door endpoint hosting App Configuration data (feature flags, etc.)
+    azureFrontDoorEndpoint: "YOUR-AZURE-FRONT-DOOR-ENDPOINT"
     ```
 
 - Create a variant feature flag named `Greeting` in your App Configuration store with the below configuration:

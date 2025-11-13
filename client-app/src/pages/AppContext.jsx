@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-const appInsightsConnectionString = "YOUR-APP-INSIGHTS-CONNECTION-STRING";
+import { config } from "../config";
 
 import { createContext, useState, useEffect } from "react";
 import { loadFromAzureFrontDoor } from "@azure/app-configuration-provider";
@@ -15,14 +15,14 @@ export const ContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(undefined);
   const [featureManager, setFeatureManager] = useState(undefined);
   const appInsights = new ApplicationInsights({ config: {
-    connectionString: appInsightsConnectionString,
+    connectionString: config.appInsightsConnectionString,
   }});
   appInsights.loadAppInsights();
 
   useEffect(() => {
     const init = async () => {
       const appConfig = await loadFromAzureFrontDoor(
-        "YOUR-AZURE-FRONT-DOOR-ENDPOINT",
+        config.azureFrontDoorEndpoint,
         {
           featureFlagOptions: {
             enabled: true
