@@ -4,7 +4,7 @@ A react application showing how to load a **variant feature flag**  from **Azure
 
 ## Prerequisites
 * Node.js 18+
-* Azure App Configuration instance with a Front Door endpoint exposing it
+* Azure Front Door endpoint configured with Azure App Configuration as its origin.
 * Application Insights resource
 
 ## Get Started
