@@ -1,23 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "./pages/AppContext";
 
 const Layout = ({ children }) => {
-  const { featureManager, currentUser, lastRefresh, logoutUser } = useContext(AppContext);
-  const [beta, setBeta] = useState(false);
+  const { currentUser, logoutUser } = useContext(AppContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const init = async () => {  
-      const enabled = await featureManager?.isEnabled("Beta");
-      setBeta(enabled);
-    };
-
-    init();
-  }, [featureManager, lastRefresh]);
   
   const handleLogout = () => {
     logoutUser();
@@ -32,12 +22,6 @@ const Layout = ({ children }) => {
           <nav>
             <Link to="/">Home</Link>
             <Link to="/privacy">Privacy</Link>
-            { beta ? 
-              ( 
-                <Link to="/beta">Beta</Link>
-              ) :  
-              null 
-            }
           </nav>
         </div>
         <div className="navbar-right">
