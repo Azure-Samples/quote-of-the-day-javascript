@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { useEffect, useContext } from "react";
+import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AppContext } from "./pages/AppContext";
 
@@ -21,7 +21,6 @@ const Layout = ({ children }) => {
           <Link to="/" className="logo">QuoteOfTheDay</Link>
           <nav>
             <Link to="/">Home</Link>
-            <Link to="/privacy">Privacy</Link>
           </nav>
         </div>
         <div className="navbar-right">
@@ -47,7 +46,7 @@ const Layout = ({ children }) => {
       </main>
 
       <footer>
-        <p>&copy; 2025 - QuoteOfTheDay - <Link to="/privacy">Privacy</Link></p>
+        <p>&copy; 2025 - QuoteOfTheDay</p>
       </footer>
     </div>
   );
