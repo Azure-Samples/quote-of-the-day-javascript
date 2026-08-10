@@ -68,7 +68,9 @@ function startServer() {
         const { userId, groups: groupsQuery } = req.query;
         const groups = (Array.isArray(groupsQuery) ? groupsQuery : [groupsQuery])
             .filter((group) => typeof group === "string")
-            .flatMap((group) => group.split(","));
+            .flatMap((group) => group.split(","))
+            .map((group) => group.trim())
+            .filter(Boolean);
         const variant = await featureManager.getVariant("Greeting", { userId: userId, groups });
         res.status(200).send({
             message: variant?.configuration
