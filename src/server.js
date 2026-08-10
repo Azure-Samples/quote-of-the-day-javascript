@@ -65,8 +65,11 @@ function startServer() {
     server.use(express.static("public"));
 
     server.get("/api/getGreetingMessage", async (req, res) => {
-        const { userId, groups } = req.query;
-        const variant = await featureManager.getVariant("Greeting", { userId: userId, groups: groups ? groups.split(",") : [] });
+        const { userId, groups: groupsQuery } = req.query;
+        const groups = (Array.isArray(groupsQuery) ? groupsQuery : [groupsQuery])
+            .filter((group) => typeof group === "string")
+            .flatMap((group) => group.split(","));
+        const variant = await featureManager.getVariant("Greeting", { userId: userId, groups });
         res.status(200).send({
             message: variant?.configuration
         });
